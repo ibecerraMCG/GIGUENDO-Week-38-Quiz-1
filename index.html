@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 38 Quiz 1</title>
+
+    <style>
+        /* --- CSS Variables & Themes --- */
+        :root {
+            --transition-speed: 0.3s;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            
+            /* Default Feedback Colors (Fallback for custom themes) */
+            --feedback-success-bg: #064e3b;
+            --feedback-success-border: #059669;
+            --feedback-success-text: #a7f3d0;
+            --feedback-error-bg: #7f1d1d;
+            --feedback-error-border: #dc2626;
+            --feedback-error-text: #fecaca;
+        }[data-theme="dark"] {
+            --bg-body: #1e293b; --bg-card: #334155; --bg-header: #0f172a;
+            --text-main: #f1f5f9; --text-muted: #94a3b8; --text-accent: #38bdf8;
+            --border-color: #475569; --highlight-bg: #475569;
+            --button-bg: #38bdf8; --button-text: #0f172a; --button-hover: #0ea5e9;
+        }[data-theme="light"] {
+            --bg-body: #f3f4f6; --bg-card: #ffffff; --bg-header: #ffffff;
+            --text-main: #1f2937; --text-muted: #6b7280; --text-accent: #2563eb;
+            --border-color: #e5e7eb; --highlight-bg: #f3f4f6;
+            --button-bg: #2563eb; --button-text: #ffffff; --button-hover: #1d4ed8;
+            --feedback-success-bg: #ecfdf5; --feedback-success-border: #34d399; --feedback-success-text: #065f46;
+            --feedback-error-bg: #fef2f2; --feedback-error-border: #f87171; --feedback-error-text: #991b1b;
+        }[data-theme="midnight"] {
+            --bg-body: #000000; --bg-card: #000000; --bg-header: #000000;
+            --text-main: #e0e0e0; --text-muted: #888888; --text-accent: #90caf9;
+            --border-color: #333333; --highlight-bg: #1a1a1a;
+            --button-bg: #90caf9; --button-text: #000000; --button-hover: #42a5f5;
+            --feedback-success-bg: #051b11; --feedback-success-border: #0f5132; --feedback-success-text: #75b798;
+            --feedback-error-bg: #2c0b0e; --feedback-error-border: #842029; --feedback-error-text: #ea868f;
+        }[data-theme="legacy-dark"] {
+            --bg-body: #2d343e; --bg-card: #3c424f; --bg-header: #3c424f;
+            --text-main: #e8e6e3; --text-muted: #b0c4de; --text-accent: #8ab4f8;
+            --border-color: #555; --highlight-bg: #454c5a;
+            --button-bg: #8ab4f8; --button-text: #202124; --button-hover: #a3c5f9;
+            --feedback-success-bg: #344e41; --feedback-success-border: #52b788; --feedback-success-text: #c7f9cc;
+            --feedback-error-bg: #5e2129; --feedback-error-border: #a4133c; --feedback-error-text: #f8d7da;
+        }[data-theme="sepia"] {
+            --bg-body: #f4ecd8; --bg-card: #fdf6e3; --bg-header: #e4d5b7;
+            --text-main: #433422; --text-muted: #7c6f5a; --text-accent: #a05a2c;
+            --border-color: #d3c4a5; --highlight-bg: #ebe1c9;
+            --button-bg: #a05a2c; --button-text: #fdf6e3; --button-hover: #864822;
+            --feedback-success-bg: #e6f4ea; --feedback-success-border: #8ab893; --feedback-success-text: #2e4c35;
+            --feedback-error-bg: #f9e3e3; --feedback-error-border: #d48f8f; --feedback-error-text: #5c2b2b;
+        }[data-theme="contrast"] {
+            --bg-body: #000000; --bg-card: #000000; --bg-header: #000000;
+            --text-main: #ffffff; --text-muted: #dddddd; --text-accent: #ffff00;
+            --border-color: #ffffff; --highlight-bg: #333333;
+            --button-bg: #ffff00; --button-text: #000000; --button-hover: #e6e600;
+            --feedback-success-bg: #000000; --feedback-success-border: #00ff00; --feedback-success-text: #00ff00;
+            --feedback-error-bg: #000000; --feedback-error-border: #ff0000; --feedback-error-text: #ff0000;
+        }
+
+        /* --- Global Reset & Layout --- */
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-main);
+            margin: 0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            line-height: 1.6;
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: var(--bg-header);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        header.unpinned { position: relative; box-shadow: none; }
+
+        .header-top {
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; flex-wrap: wrap; gap: 15px;
+        }
+
+        header h1 { font-size: 1.5rem; margin: 0; color: var(--text-accent); font-weight: 700; }
+
+        .controls-wrapper { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+        /* --- Custom Theme Builder --- */
+        .custom-builder {
+            display: none; flex-wrap: wrap; gap: 15px;
+            background-color: var(--bg-card); padding: 10px 15px;
+            border-radius: 8px; border: 1px solid var(--border-color);
+            margin-top: 5px; font-size: 0.85rem; animation: fadeIn 0.3s;
+            width: 100%; justify-content: flex-end;
+        }
+        .custom-builder.active { display: flex; }
+        .color-picker-group { display: flex; align-items: center; gap: 8px; }
+        .color-picker-group input[type="color"] {
+            border: none; width: 25px; height: 25px; border-radius: 4px;
+            cursor: pointer; padding: 0; background: none;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Controls --- */
+        .header-btn {
+            background-color: var(--highlight-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header-btn:hover {
+            border-color: var(--text-accent);
+            color: var(--text-accent);
+        }
+
+        .pin-btn {
+            background: none; border: 1px solid var(--border-color); color: var(--text-main);
+            cursor: pointer; padding: 0 10px; border-radius: 6px; font-size: 1rem;
+            transition: background-color 0.2s; height: 34px; display: flex;
+            align-items: center; justify-content: center;
+        }
+        .pin-btn:hover { background-color: var(--highlight-bg); }
+        .pin-btn.pin-active { background-color: rgba(0, 0, 0, 0.1); }
+
+        select#theme-select {
+            padding: 0 12px; border-radius: 6px; border: 1px solid var(--border-color);
+            background-color: var(--bg-card); color: var(--text-main);
+            cursor: pointer; font-family: inherit; height: 34px;
+        }
+
+        /* --- Section Navigation --- */
+        .section-nav { display: flex; gap: 10px; flex-wrap: wrap; }
+        .section-nav button {
+            background-color: var(--highlight-bg); color: var(--text-main);
+            border: 1px solid var(--border-color); padding: 6px 12px;
+            border-radius: 6px; cursor: pointer; font-size: 0.85rem;
+            font-weight: 500; transition: all 0.2s;
+        }
+        .section-nav button:hover { border-color: var(--text-accent); color: var(--text-accent); }
+
+        /* --- Main Content --- */
+        .container {
+            max-width: 850px;
+            margin: 2rem auto;
+            padding: 0 1rem 4rem 1rem;
+        }
+
+        .section-header {
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--text-accent);
+            color: var(--text-accent);
+            font-size: 1.5rem;
+            font-weight: 700;
+            scroll-margin-top: 150px; /* Offset for sticky header */
+        }
+
+        /* --- Question Card --- */
+        .question-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .lo-box {
+            background-color: var(--highlight-bg);
+            border-left: 4px solid var(--text-accent);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-style: italic;
+            display: none; /* Hidden by default */
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- Options --- */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-label:hover {
+            background-color: var(--highlight-bg);
+            border-color: var(--text-muted);
+        }
+
+        .option-label input {
+            margin-top: 0.3rem;
+            margin-right: 1rem;
+            accent-color: var(--text-accent);
+            transform: scale(1.2);
+        }
+
+        /* --- Buttons --- */
+        .btn-check {
+            margin-top: 1.5rem;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-check:hover {
+            opacity: 0.9;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-link:hover {
+            opacity: 0.9;
+        }
+
+        /* --- Feedback Area --- */
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            display: none; /* Hidden by default */
+            border: 1px solid transparent;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback.correct {
+            background-color: var(--feedback-success-bg);
+            border-color: var(--feedback-success-border);
+            color: var(--feedback-success-text);
+        }
+
+        .feedback.incorrect {
+            background-color: var(--feedback-error-bg);
+            border-color: var(--feedback-error-border);
+            color: var(--feedback-error-text);
+        }
+
+        .feedback-header {
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .rationale {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .source {
+            display: block;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            opacity: 0.8;
+            font-style: italic;
+            border-top: 1px dashed currentColor;
+            padding-top: 0.5rem;
+        }
+
+        /* --- Mobile Tweaks --- */
+        @media (max-width: 768px) {
+            .header-top { flex-direction: column; align-items: flex-start; }
+            .controls-wrapper { width: 100%; justify-content: flex-start; }
+            .section-nav { justify-content: flex-start; }
+            .custom-builder { justify-content: flex-start; }
+            header h1 { font-size: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="main-header">
+        <div class="header-top">
+            <h1>Week 38 Quiz 1</h1>
+            <div class="controls-wrapper">
+                
+                <!-- Reveal LOs Button -->
+                <button id="reveal-all-btn" class="header-btn" onclick="toggleAllLOs()">Show Learning Objectives</button>
+                
+                <!-- Pin Button -->
+                <button class="pin-btn pin-active" id="pin-btn" onclick="toggleHeader()" title="Pin/Unpin Header">📌</button>
+                
+                <!-- Theme Selector -->
+                <div class="theme-control">
+                    <select id="theme-select" onchange="changeTheme(this.value)">
+                        <option value="dark">Modern Dark</option>
+                        <option value="midnight">Midnight</option>
+                        <option value="light">Modern Light</option>
+                        <option value="legacy-dark">Legacy Dark</option>
+                        <option value="sepia">Sepia</option>
+                        <option value="contrast">High Contrast</option>
+                        <option value="custom">⚙️ Custom...</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Custom Theme Color Pickers -->
+            <div class="custom-builder" id="custom-builder">
+                <div class="color-picker-group">
+                    <label>Background:</label>
+                    <input type="color" id="color-bg" value="#1a1a2e" oninput="updateCustomTheme()">
+                </div>
+                <div class="color-picker-group">
+                    <label>Cards:</label>
+                    <input type="color" id="color-card" value="#16213e" oninput="updateCustomTheme()">
+                </div>
+                <div class="color-picker-group">
+                    <label>Text:</label>
+                    <input type="color" id="color-text" value="#e94560" oninput="updateCustomTheme()">
+                </div>
+                <div class="color-picker-group">
+                    <label>Accent:</label>
+                    <input type="color" id="color-accent" value="#0f3460" oninput="updateCustomTheme()">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dynamic Navigation Bar -->
+        <div class="section-nav" id="section-nav"></div>
+    </header>
+
+    <div class="container">
+        <div id="quiz-root">
+            <!-- Content injected via JS -->
+        </div>
+    </div>
+
+    <script>
+        // --- Data ---
+        const quizData =[
+            // --- Section 1: Superior and Inferior Mesenteric Arteries and Associated Abdominal Viscera ---
+            {
+                section: "Superior and Inferior Mesenteric Arteries and Associated Abdominal Viscera",
+                fullLO: "LO1: Identify the jejunum, ileum, appendix, and large intestine (cecum, ascending colon, transverse colon, descending colon, and sigmoid colon), rectum, and anus. Describe their location, gross structure (including parts, internal features, and associated mesenteries), distinguishing characteristics, neurovascular supply, relationships to other structures, and basic functions.",
+                question: "A 45-year-old male undergoes an exploratory laparotomy for a suspected bowel obstruction. During the procedure, the surgeon inspects the small intestine and notes a segment located in the right lower quadrant. This segment has a thick, fatty mesentery making the vasculature difficult to see, and the arterial supply consists of numerous short arcades and short vasa recta. Palpation reveals a sparse presence of mucosal folds. Which of the following best identifies this segment of the intestine?",
+                options: {
+                    A: "Ascending colon",
+                    B: "Descending duodenum",
+                    C: "Ileum",
+                    D: "Jejunum",
+                    E: "Transverse colon"
+                },
+                correctAnswer: "C",
+                rationale: "The ileum is the third portion of the small intestine, located in the right lower quadrant. It is distinguished from the jejunum by having numerous short arcades, short vasa recta, a thicker, fatty mesentery that obscures the vasculature, and a sparse presence of plicae circulares (mucosal folds).",
+                source: "[Superior and Inferior Mesenteric Arteries and Associated Viscera PDF], Page 3: \"Distinguishing characteristics: a. Numerous short arcades and short vasa recta b. Thicker, fatty mesentery making vasculature less visible c. Sparse presence of plicae circulares (absent in distal ileum)\""
+            },
+            {
+                section: "Superior and Inferior Mesenteric Arteries and Associated Abdominal Viscera",
+                fullLO: "LO1: Identify the jejunum, ileum, appendix, and large intestine (cecum, ascending colon, transverse colon, descending colon, and sigmoid colon), rectum, and anus. Describe their location, gross structure (including parts, internal features, and associated mesenteries), distinguishing characteristics, neurovascular supply, relationships to other structures, and basic functions.",
+                question: "A 56-year-old woman undergoes a screening colonoscopy. As the gastroenterologist advances the endoscope through the large intestine, characteristic sacculations or pouches are observed along the length of the colon. These pouches give the colon its typical segmented appearance. Which of the following anatomic features is primarily responsible for the formation of these sacculations?",
+                options: {
+                    A: "Dense packing of plicae circulares",
+                    B: "Invagination of omental (epiploic) appendages",
+                    C: "Peristaltic contractions of the internal anal sphincter",
+                    D: "Teniae coli being shorter than the large intestine",
+                    E: "Thickening of the circular smooth muscle layer"
+                },
+                correctAnswer: "D",
+                rationale: "The characteristic sacculations of the large intestine are called haustra. They form because the three thickened bands of longitudinal smooth muscle, the teniae coli, are shorter than the large intestine itself, causing the wall of the colon to bunch up.",
+                source: "[Superior and Inferior Mesenteric Arteries and Associated Viscera PDF], Page 4: \"Haustra – sacculations or pouches of the colon between the teniae coli a. Form because teniae coli are shorter than large intestine, causing the large intestine to bunch up with the contraction of the teniae coli\""
+            },
+            {
+                section: "Superior and Inferior Mesenteric Arteries and Associated Abdominal Viscera",
+                fullLO: "LO2: Identify and describe the superior and inferior mesenteric arteries, major branches, and the structures that they supply noting major anastomoses. Describe and trace the venous drainage patterns of the small and large intestines, rectum, and anus.",
+                question: "A 72-year-old male with severe atherosclerotic disease is found to have complete occlusion of the inferior mesenteric artery (IMA) at its origin. Despite this, his descending colon remains viable and does not undergo ischemic necrosis. Collateral blood flow to the descending colon is most likely maintained by an anastomosis connecting the middle colic artery to the left colic artery. What is the name of this anastomotic vessel?",
+                options: {
+                    A: "Appendicular artery",
+                    B: "Gastroduodenal artery",
+                    C: "Ileocolic artery",
+                    D: "Marginal artery (of Drummond)",
+                    E: "Superior rectal artery"
+                },
+                correctAnswer: "D",
+                rationale: "The marginal artery (of Drummond) provides a crucial collateral circulation pathway by connecting the middle colic artery (a branch of the superior mesenteric artery) to the left colic artery (a branch of the inferior mesenteric artery).",
+                source: "[Superior and Inferior Mesenteric Arteries and Associated Viscera PDF], Page 7: \"Marginal artery (of Drummond) – connect middle colic a. (SMA) to left colic a. (IMA) for collateral circulation\""
+            },
+            {
+                section: "Superior and Inferior Mesenteric Arteries and Associated Abdominal Viscera",
+                fullLO: "LO2: Identify and describe the superior and inferior mesenteric arteries, major branches, and the structures that they supply noting major anastomoses. Describe and trace the venous drainage patterns of the small and large intestines, rectum, and anus.",
+                question: "A 60-year-old male with a history of cirrhosis presents with ascites and signs of portal hypertension. The elevated pressure in his portal venous system causes backflow and engorgement of the veins draining his gastrointestinal tract. Which of the following veins directly drains the descending colon, sigmoid colon, and superior portion of the rectum before joining the splenic vein?",
+                options: {
+                    A: "Hepatic portal vein",
+                    B: "Inferior mesenteric vein",
+                    C: "Internal pudendal vein",
+                    D: "Left gastric vein",
+                    E: "Superior mesenteric vein"
+                },
+                correctAnswer: "B",
+                rationale: "The inferior mesenteric vein lies to the left of the SMA and drains the descending colon, sigmoid colon, and the superior portion of the rectum. It typically joins with the splenic vein, which then joins the superior mesenteric vein to form the portal vein.",
+                source: "[Superior and Inferior Mesenteric Arteries and Associated Viscera PDF], Page 7: \"Inferior Mesenteric Vein... Drains: descending colon, sigmoid colon, and superior portion of rectum... Joins with splenic vein and later the superior mesenteric vein to form portal vein\""
+            },
+            {
+                section: "Superior and Inferior Mesenteric Arteries and Associated Abdominal Viscera",
+                fullLO: "LO3: Discuss the sympathetic and parasympathetic innervation of gut structures.",
+                question: "A 50-year-old woman undergoes resection of a benign tumor located in the descending colon. The surgeon must be careful to preserve the autonomic nerve supply to the remaining hindgut to ensure proper peristalsis and function. Presynaptic parasympathetic fibers supplying the large intestine distal to the left colic flexure originate from which of the following locations?",
+                options: {
+                    A: "Anterior vagal trunk",
+                    B: "Celiac ganglion",
+                    C: "Intermediolateral cell column (IML) at T8-L2",
+                    D: "S2-S4 spinal cord levels",
+                    E: "Superior mesenteric ganglion"
+                },
+                correctAnswer: "D",
+                rationale: "Parasympathetic innervation to the gut changes at the left colic flexure. Proximal to the flexure, presynaptic fibers come from the Vagus nerve (CN X). Distal to the left colic flexure, presynaptic parasympathetic fibers originate from the S2-S4 spinal cord levels and follow the pelvic splanchnic nerves.",
+                source: "[Superior and Inferior Mesenteric Arteries and Associated Viscera PDF], Page 8: \"Distal to the left colic flexure a. Presynaptic fibers originate from the S2-S4 spinal cord levels. b. Presynaptic fibers follow pelvic splanchnic nerves to their target organ\""
+            },
+            {
+                section: "Superior and Inferior Mesenteric Arteries and Associated Abdominal Viscera",
+                fullLO: "LO3: Discuss the sympathetic and parasympathetic innervation of gut structures.",
+                question: "A 35-year-old man is suddenly frightened by a loud noise, triggering a systemic \"fight or flight\" response. This results in decreased intestinal peristalsis and profound vasoconstriction of the mesenteric vessels. The presynaptic sympathetic fibers responsible for initiating this response in the gut originate from which of the following structures?",
+                options: {
+                    A: "Intermediolateral cell column (IML) at T8-L2(3)",
+                    B: "Myenteric (Auerbach's) plexus",
+                    C: "Parasympathetic ganglia of the vagus nerve",
+                    D: "S2-S4 spinal cord segments",
+                    E: "Superior mesenteric ganglion"
+                },
+                correctAnswer: "A",
+                rationale: "Sympathetic innervation to the gut mediates the \"fight or flight\" response, causing vasoconstriction and inhibiting peristalsis. The presynaptic fibers for this pathway originate in the intermediolateral cell column (IML) of the spinal cord at the T8-L2(3) levels.",
+                source: "[Superior and Inferior Mesenteric Arteries and Associated Viscera PDF], Page 8: \"Sympathetic Innervation 1. Presynaptic fibers originate in the IML at the T8-L2(3) levels... Function: “fight or flight” a. Vasoconstriction b. Inhibits peristalsis\""
+            },
+            {
+                section: "Superior and Inferior Mesenteric Arteries and Associated Abdominal Viscera",
+                fullLO: "LO4: Identify locations of referred pain for major midgut and hindgut structures and discuss how pain is referred when areas of the peritoneum are irritated. Explain how pain from an inflamed appendix is referred.",
+                question: "A 22-year-old man comes to the emergency department complaining of a vague, dull ache around his umbilicus that started 4 hours ago. He is diagnosed with early acute appendicitis. Which of the following best explains why the pain is initially perceived in the periumbilical region?",
+                options: {
+                    A: "Afferent pain fibers enter the spinal cord at the T10 level",
+                    B: "Inflammatory exudate pools around the umbilicus",
+                    C: "Irritation of the parietal peritoneum in the right lower quadrant",
+                    D: "Somatic sensory fibers from the vagus nerve refer pain to the midline",
+                    E: "The appendix physically rests against the umbilicus"
+                },
+                correctAnswer: "A",
+                rationale: "In early appendicitis, the visceral pain is referred to the T10 dermatome (the periumbilical region) because the visceral afferent pain fibers accompanying sympathetic nerves from the appendix enter the spinal cord at the T10 level. The brain misinterprets this visceral pain as somatic pain coming from that dermatome.",
+                source: "[Superior and Inferior Mesenteric Arteries and Associated Viscera PDF], Page 5: \"The pain of appendicitis usually commences as a vague pain in the peri-umbilical region because afferent pain fibers enter the spinal cord at the T10 level.\""
+            },
+            {
+                section: "Superior and Inferior Mesenteric Arteries and Associated Abdominal Viscera",
+                fullLO: "LO4: Identify locations of referred pain for major midgut and hindgut structures and discuss how pain is referred when areas of the peritoneum are irritated. Explain how pain from an inflamed appendix is referred.",
+                question: "A 24-year-old woman is admitted for suspected appendicitis. Her pain initially started around her belly button but has now localized as a severe, sharp pain in her right lower quadrant. Digital pressure over McBurney’s point produces maximum tenderness. This shift and change in the quality of the pain is most directly the result of irritation of which of the following structures?",
+                options: {
+                    A: "Ileocecal valve",
+                    B: "Parietal peritoneum lining the abdominal wall",
+                    C: "Pelvic splanchnic nerves",
+                    D: "Visceral peritoneum covering the appendix",
+                    E: "White communicating rami of T10"
+                },
+                correctAnswer: "B",
+                rationale: "While early appendicitis causes vague referred pain via visceral afferents, the later, severe, well-localized pain in the right lower quadrant occurs when the inflammation spreads to irritate the parietal peritoneum, which is richly innervated by localized somatic sensory fibers.",
+                source: "[Superior and Inferior Mesenteric Arteries and Associated Viscera PDF], Page 5: \"Later, severe pain in the right lower quadrant results from irritation of the parietal peritoneum lining the abdominal wall.\""
+            },
+            {
+                section: "Superior and Inferior Mesenteric Arteries and Associated Abdominal Viscera",
+                fullLO: "LO5: Discuss the anatomical basis, clinical presentation (including presentation via diagnostic imaging), & clinical significance of the following: diverticulosis, appendicitis, appendectomy, internal and external hemorrhoids.",
+                question: "A 68-year-old man undergoes a routine colonoscopy. The gastroenterologist observes multiple small, outward pouchings of the mucosa along the wall of the sigmoid colon. The patient is currently asymptomatic. Which of the following is the most likely diagnosis?",
+                options: {
+                    A: "Acute appendicitis",
+                    B: "Diverticulosis",
+                    C: "External hemorrhoids",
+                    D: "Meckel's diverticulum",
+                    E: "Ulcerative colitis"
+                },
+                correctAnswer: "B",
+                rationale: "Diverticulosis is characterized by multiple false diverticula (external evaginations or outpocketings of the mucosa) that develop along the intestine, most commonly found in the sigmoid colon of middle-aged and elderly people.",
+                source: "[Superior and Inferior Mesenteric Arteries and Associated Viscera PDF], Page 6: \"Diverticulosis is a disorder in which multiple false diverticula (external evaginations of outpocketings of the mucosa of the colon) develop along the intestine. It primarily affects middle-aged and elderly people. Diverticulosis is commonly found in the sigmoid colon.\""
+            },
+            {
+                section: "Superior and Inferior Mesenteric Arteries and Associated Abdominal Viscera",
+                fullLO: "LO5: Discuss the anatomical basis, clinical presentation (including presentation via diagnostic imaging), & clinical significance of the following: diverticulosis, appendicitis, appendectomy, internal and external hemorrhoids.",
+                question: "A 19-year-old man presents with severe abdominal pain. Examination reveals maximum tenderness when digital pressure is applied to a specific point approximately one-third of the way down an oblique line drawn from the right anterior superior iliac spine (ASIS) to the umbilicus. Which of the following is the most likely diagnosis?",
+                options: {
+                    A: "Acute appendicitis",
+                    B: "Diverticulosis",
+                    C: "Internal hemorrhoids",
+                    D: "Portal hypertension",
+                    E: "Sigmoid volvulus"
+                },
+                correctAnswer: "A",
+                rationale: "The point described is McBurney's point. Maximum abdominal tenderness at this location upon digital pressure is the classic clinical presentation for acute appendicitis.",
+                source: "[Superior and Inferior Mesenteric Arteries and Associated Viscera PDF], Page 5: \"Acute inflammation of the appendix is a common cause of an acute abdomen... Digital pressure over McBurney’s point produces maximum abdominal tenderness.\""
+            },
+            {
+                section: "Superior and Inferior Mesenteric Arteries and Associated Abdominal Viscera",
+                fullLO: "LO5: Discuss the anatomical basis, clinical presentation (including presentation via diagnostic imaging), & clinical significance of the following: diverticulosis, appendicitis, appendectomy, internal and external hemorrhoids.",
+                question: "A 25-year-old female is undergoing a laparoscopic appendectomy for acute appendicitis. During the procedure, the surgeon must identify, isolate, and ligate the artery that directly supplies the appendix to prevent hemorrhage. To properly locate this artery, the surgeon should look for a vessel that courses:",
+                options: {
+                    A: "Anterior to the ascending colon",
+                    B: "Anterior to the duodenojejunal junction",
+                    C: "Posterior to the distal ileum",
+                    D: "Posterior to the stomach",
+                    E: "Within the transverse mesocolon"
+                },
+                correctAnswer: "C",
+                rationale: "The appendicular artery, a branch of the ileocolic artery, supplies the appendix. Anatomically, it runs posterior to the terminal (distal) ileum to reach the appendix.",
+                source: "[Superior and Inferior Mesenteric Arteries and Associated Viscera PDF], Page 4: \"Arterial supply: Appendicular artery (branch off the ileocolic artery; runs posterior to the terminal ileum to reach the appendix)\""
+            },
+            {
+                section: "Superior and Inferior Mesenteric Arteries and Associated Abdominal Viscera",
+                fullLO: "LO5: Discuss the anatomical basis, clinical presentation (including presentation via diagnostic imaging), & clinical significance of the following: diverticulosis, appendicitis, appendectomy, internal and external hemorrhoids.",
+                question: "A 45-year-old pregnant woman reports bright red blood on the toilet paper after defecation. She notes that the bleeding is completely painless. Examination reveals prolapsed, ulcerated mucosal veins just inside the anus, at the beginning of the rectum. Which of the following best explains why this condition is characteristically painless?",
+                options: {
+                    A: "The area is exclusively supplied by the superior rectal artery.",
+                    B: "The area is innervated solely by somatic sensory fibers.",
+                    C: "The area is innervated solely by visceral afferent fibers.",
+                    D: "The area lacks any lymphatic drainage.",
+                    E: "The veins in this area are not connected to the portal system."
+                },
+                correctAnswer: "C",
+                rationale: "Internal hemorrhoids occur above the pectinate line (inside the anus/beginning of the rectum). They are characteristically painless and can be treated without anesthesia because the mucosa in this region is innervated only by visceral afferent fibers, which do not transmit sharp somatic pain.",
+                source: "[Superior and Inferior Mesenteric Arteries and Associated Viscera PDF], Page 10: \"Internal hemorrhoids are not painful & can be treated without anesthesia because they are only innervated by visceral afferent fibers.\""
+            },
+            {
+                section: "Superior and Inferior Mesenteric Arteries and Associated Abdominal Viscera",
+                fullLO: "LO5: Discuss the anatomical basis, clinical presentation (including presentation via diagnostic imaging), & clinical significance of the following: diverticulosis, appendicitis, appendectomy, internal and external hemorrhoids.",
+                question: "A 50-year-old man with a history of chronic constipation presents with a painful mass hanging outside his anal opening. Examination reveals a thrombosed vein covered by skin. The severe pain associated with this mass is mediated by which of the following nerves?",
+                options: {
+                    A: "Inferior rectal nerves (somatic sensory fibers)",
+                    B: "Pelvic splanchnic nerves",
+                    C: "Superior rectal nerves",
+                    D: "Vagus nerve",
+                    E: "Visceral afferent fibers of T10"
+                },
+                correctAnswer: "A",
+                rationale: "External hemorrhoids occur at the anal opening, are covered by skin, and are notoriously painful because the region below the pectinate line is innervated by somatic sensory fibers from the inferior rectal nerves.",
+                source: "[Superior and Inferior Mesenteric Arteries and Associated Viscera PDF], Page 10: \"External hemorrhoids occur at the anal opening and may hang outside the anus... External hemorrhoids are painful because they are innervated by somatic sensory fibers (inferior rectal nerves).\""
+            },
+            // --- Section 2: Development of the Pharyngeal Arches ---
+            {
+                section: "Development of the Pharyngeal Arches",
+                fullLO: "LO1: Describe the development of and structures formed by each pharyngeal arch, pouch, groove/cleft, and membrane.",
+                question: "A developmental biologist is studying the embryological origins of the head and neck in a mammalian model. A mutation is induced that specifically destroys the mesodermal muscular component of the first pharyngeal arch. Which of the following muscles would most likely fail to develop in this embryo?",
+                options: {
+                    A: "Muscles of facial expression",
+                    B: "Pharyngeal constrictors",
+                    C: "Posterior belly of the digastric",
+                    D: "Stapedius",
+                    E: "Temporalis"
+                },
+                correctAnswer: "E",
+                rationale: "The first pharyngeal arch gives rise to the muscles of mastication (temporalis, masseter, medial and lateral pterygoids), mylohyoid, anterior belly of the digastric, tensor tympani, and tensor veli palatini. Muscles of facial expression and the posterior belly of the digastric derive from the 2nd arch.",
+                source: "[Development of the Pharyngeal Arches PDF], Page 2: \"Structures derived from the 1st Pharyngeal Arch:... Muscles – Muscles of mastication (temporalis, masseter, medial & lateral pterygoids), mylohyoid, anterior belly of the digastric muscle, tensor tympani, & tensor veli palatini\""
+            },
+            {
+                section: "Development of the Pharyngeal Arches",
+                fullLO: "LO1: Describe the development of and structures formed by each pharyngeal arch, pouch, groove/cleft, and membrane.",
+                question: "During a pediatric otolaryngology surgery to correct a middle ear defect, the surgeon notes an anomaly in the tympanic cavity and mastoid antrum. These specific middle ear structures develop embryologically from the expansion of the tubotympanic recess. From which of the following pharyngeal structures does the tubotympanic recess originate?",
+                options: {
+                    A: "First pharyngeal cleft",
+                    B: "First pharyngeal pouch",
+                    C: "Second pharyngeal arch",
+                    D: "Second pharyngeal pouch",
+                    E: "Third pharyngeal pouch"
+                },
+                correctAnswer: "B",
+                rationale: "The first pharyngeal pouch gives rise to the tubotympanic recess, which develops into the tympanic cavity and mastoid antrum.",
+                source: "[Development of the Pharyngeal Arches PDF], Page 5: \"First Pharyngeal Pouch 1. Located between the 1st & 2nd pharyngeal arches 2. Gives rise to the tubotympanic recess a. Develops into the tympanic cavity and mastoid antrum\""
+            },
+            {
+                section: "Development of the Pharyngeal Arches",
+                fullLO: "LO2: Discuss the clinical presentation and etiology of congenital anomalies affecting the pharyngeal arches, pouches, and grooves including first pharyngeal arch syndromes (Treacher Collins syndrome, Pierre-Robin syndrome); cervical (branchial) sinuses, fistulas, and cysts; and 22q11.2 deletion syndrome (DiGeorge syndrome).",
+                question: "A newborn infant presents with down-slanting palpebral fissures, significant underdevelopment of the zygomatic bones, micrognathia, and bilateral conductive hearing loss due to external and middle ear malformations. Genetic testing reveals an autosomal dominant defect in the TCOF1 gene, leading to insufficient migration of neural crest cells. Which of the following is the most likely diagnosis?",
+                options: {
+                    A: "DiGeorge syndrome",
+                    B: "Goldenhar syndrome",
+                    C: "Hirschsprung disease",
+                    D: "Pierre-Robin sequence",
+                    E: "Treacher Collins syndrome"
+                },
+                correctAnswer: "E",
+                rationale: "Treacher Collins syndrome is a first arch syndrome caused by insufficient migration of neural crest cells (associated with the TCOF1 gene). It is characterized by malar hypoplasia (underdeveloped zygomatic bones), down-slanting palpebral fissures, micrognathia, and ear/lower eyelid abnormalities.",
+                source: "[Development of the Pharyngeal Arches PDF], Page 3: \"Insufficient migration of neural crest cells into the first pharyngeal arch... Treacher Collins syndrome is another example, which is characterized by malar hypoplasia, micrognathia, ear and lower eyelid abnormalities.\" (Note: TCOF1 and down-slanting palpebral fissures are also explicitly listed on slide 14 of the lecture presentation)."
+            },
+            {
+                section: "Development of the Pharyngeal Arches",
+                fullLO: "LO2: Discuss the clinical presentation and etiology of congenital anomalies affecting the pharyngeal arches, pouches, and grooves including first pharyngeal arch syndromes (Treacher Collins syndrome, Pierre-Robin syndrome); cervical (branchial) sinuses, fistulas, and cysts; and 22q11.2 deletion syndrome (DiGeorge syndrome).",
+                question: "A neonate requires immediate intubation in the delivery room due to severe airway obstruction. Physical examination reveals an extremely small mandible (micrognathia), a tongue that is displaced far posteriorly in the pharynx (glossoptosis), and a U-shaped cleft palate. This classic triad of symptoms is caused by a developmental sequence affecting the first pharyngeal arch. What is the diagnosis?",
+                options: {
+                    A: "DiGeorge syndrome",
+                    B: "Gastroschisis",
+                    C: "Goldenhar syndrome",
+                    D: "Pierre-Robin sequence",
+                    E: "Treacher Collins syndrome"
+                },
+                correctAnswer: "D",
+                rationale: "Pierre-Robin sequence is a first arch syndrome characterized by the specific triad of mandibular hypoplasia (micrognathia), posterior displacement of the tongue (glossoptosis), and a resulting cleft palate (because the tongue obstructs the palatine processes from fusing).",
+                source: "[Development of the Pharyngeal Arches PDF], Page 3: \"Pierre-Robin sequence (syndrome) is one example, which is characterized by a mandibular hypoplasia, cleft palate, and posterior displacement of the tongue.\""
+            },
+            {
+                section: "Development of the Pharyngeal Arches",
+                fullLO: "LO2: Discuss the clinical presentation and etiology of congenital anomalies affecting the pharyngeal arches, pouches, and grooves including first pharyngeal arch syndromes (Treacher Collins syndrome, Pierre-Robin syndrome); cervical (branchial) sinuses, fistulas, and cysts; and 22q11.2 deletion syndrome (DiGeorge syndrome).",
+                question: "A 16-year-old male notices a slowly enlarging, painless swelling on the left side of his neck. Physical examination shows a smooth, spherical mass located just below the angle of the jaw, along the anterior border of the sternocleidomastoid muscle. The physician suspects this is a congenital remnant of the embryological structure that normally obliterates the 2nd, 3rd, and 4th pharyngeal grooves. Which of the following is the most likely diagnosis?",
+                options: {
+                    A: "Accessory spleen",
+                    B: "Cervical cyst",
+                    C: "Ectopic thyroid gland",
+                    D: "Thyroglossal duct cyst",
+                    E: "Ultimopharyngeal body"
+                },
+                correctAnswer: "B",
+                rationale: "Remnants of the cervical sinus (which normally obliterates the 2nd-4th pharyngeal grooves) can persist and form cervical cysts. These typically present in late childhood or early adulthood as a slowly enlarging, painless swelling along the anterior border of the sternocleidomastoid muscle.",
+                source: "[Development of the Pharyngeal Arches PDF], Page 5: \"Remnants of the cervical sinus can also persist and form spherical or elongated cervical cysts often located just below the angle of the jaw. Cervical cysts do not usually become apparent until late childhood or early adulthood, when they produce a slowly enlarging, painless swelling in the neck.\""
+            },
+            {
+                section: "Development of the Pharyngeal Arches",
+                fullLO: "LO2: Discuss the clinical presentation and etiology of congenital anomalies affecting the pharyngeal arches, pouches, and grooves including first pharyngeal arch syndromes (Treacher Collins syndrome, Pierre-Robin syndrome); cervical (branchial) sinuses, fistulas, and cysts; and 22q11.2 deletion syndrome (DiGeorge syndrome).",
+                question: "A newborn infant develops seizures on the second day of life. Laboratory testing reveals profound hypocalcemia. Echocardiography demonstrates Tetralogy of Fallot. A chest radiograph reveals an absent thymic shadow. These findings are the result of a microdeletion on chromosome 22q11.2 that disrupted the normal differentiation of which of the following embryological structures?",
+                options: {
+                    A: "1st and 2nd pharyngeal arches",
+                    B: "1st and 2nd pharyngeal pouches",
+                    C: "2nd and 3rd pharyngeal clefts",
+                    D: "3rd and 4th pharyngeal pouches",
+                    E: "Frontonasal prominence"
+                },
+                correctAnswer: "D",
+                rationale: "DiGeorge syndrome (22q11.2 deletion) disrupts neural crest signaling, leading to failure of the 3rd and 4th pharyngeal pouches to differentiate. Because the 3rd pouch forms the thymus and inferior parathyroids, and the 4th pouch forms the superior parathyroids, this leads to thymic hypoplasia (immune deficiency) and hypoparathyroidism (hypocalcemia).",
+                source: "[Development of the Pharyngeal Arches PDF], Page 6: \"DiGeorge syndrome or 22q11.2 deletion syndrome... If the 3rd and 4th pharyngeal pouches fail to differentiate into the thymus and the parathyroid glands, then thyroid hypoplasia and hypoparathyroidism result.\""
+            },
+            {
+                section: "Development of the Pharyngeal Arches",
+                fullLO: "LO3: Describe the development and migration of the thyroid gland. Discuss the clinical presentation and etiology of thyroglossal duct cysts and sinuses and ectopic thyroid glands.",
+                question: "A 5-year-old boy is brought to the pediatrician because of a painless, enlarging mass in the midline of his anterior neck, just inferior to the hyoid bone. When the child swallows or protrudes his tongue, the mass moves upwards. The physician explains that this mass is a remnant of the embryological tract through which the thyroid gland descended. Which of the following is the most likely diagnosis?",
+                options: {
+                    A: "Branchial cleft cyst",
+                    B: "Cervical sinus fistula",
+                    C: "Ectopic parathyroid gland",
+                    D: "Sublingual thyroid gland",
+                    E: "Thyroglossal duct cyst"
+                },
+                correctAnswer: "E",
+                rationale: "A thyroglossal duct cyst forms from a persistent remnant of the thyroglossal duct (the path of thyroid descent). It characteristically presents as a painless, enlarging, moveable mass in the midline (anterior part of the neck), most commonly just inferior to the hyoid bone.",
+                source: "[Development of the Pharyngeal Arches PDF], Page 7: \"A remnant of the thyroglossal duct can persist and may form a thyroglossal duct cyst that usually presents as a painless, moveable, enlarging mass in the anterior part of the neck inferior to the hyoid bone.\""
+            },
+            {
+                section: "Development of the Pharyngeal Arches",
+                fullLO: "LO3: Describe the development and migration of the thyroid gland. Discuss the clinical presentation and etiology of thyroglossal duct cysts and sinuses and ectopic thyroid glands.",
+                question: "A 12-year-old girl complains of difficulty swallowing. Examination of her oropharynx reveals a nodular, fleshy mass located at the base of her tongue, in the midline. A technetium-99m scan shows that this mass concentrates iodine and is the only functional thyroid tissue in her body. The surgeon advises against removing the mass because doing so would result in lifelong hypothyroidism. Which of the following best describes this embryological anomaly?",
+                options: {
+                    A: "Cervical cyst",
+                    B: "First arch syndrome",
+                    C: "Lingual thyroid gland",
+                    D: "Thyroglossal duct sinus",
+                    E: "Ultimobranchial body rest"
+                },
+                correctAnswer: "C",
+                rationale: "An ectopic thyroid gland can develop anywhere along the normal route of descent from the tongue. A lingual thyroid gland (at the base of the tongue) is the most common ectopic location. It is critical to differentiate this from a cyst before excision, as it may be the patient's only functional thyroid tissue.",
+                source: "[Development of the Pharyngeal Arches PDF], Page 7: \"An ectopic thyroid gland consists of functional thyroid tissue in a location other than the normal position... A lingual thyroid gland is the most common (~90% of cases), where thyroid tissue develops at the base of the tongue... Failure to do so may leave the person permanently dependent on thyroid medication.\""
+            },
+            {
+                section: "Development of the Pharyngeal Arches",
+                fullLO: "LO4: Describe the embryological development of the tongue and relate this to its nerve supply.",
+                question: "A 45-year-old man suffers a traumatic injury to his mandible that severely damages the lingual nerve (a branch of the mandibular division of the trigeminal nerve). As a result, he loses general sensory innervation (touch, pain, temperature) to the anterior two-thirds of his tongue. This specific pattern of innervation occurs because the anterior two-thirds of the tongue derives primarily from which of the following embryological structures?",
+                options: {
+                    A: "1st pharyngeal arch",
+                    B: "2nd pharyngeal arch",
+                    C: "3rd pharyngeal arch",
+                    D: "4th pharyngeal arch",
+                    E: "Occipital somites"
+                },
+                correctAnswer: "A",
+                rationale: "The anterior 2/3 of the tongue forms from the median and lateral lingual swellings of the 1st pharyngeal arch. Because it derives from the 1st arch, its general sensory innervation is supplied by the nerve of the 1st arch, the trigeminal nerve (specifically the lingual branch of CN V3).",
+                source: "[Development of the Pharyngeal Arches PDF], Page 8: \"Sensory innervation of the mucosa of the anterior 2/3 of the tongue is via the lingual nerve (br. of CN V3), since it is derived from the 1st pharyngeal arch.\""
+            },
+            {
+                section: "Development of the Pharyngeal Arches",
+                fullLO: "LO4: Describe the embryological development of the tongue and relate this to its nerve supply.",
+                question: "During a cranial nerve examination, a patient is asked to protrude his tongue. The physician notes that the tongue deviates to the right, indicating a lesion of the right hypoglossal nerve (CN XII). The motor fibers of the hypoglossal nerve innervate the intrinsic and extrinsic muscles of the tongue. These muscle fibers embryologically originate and migrate into the tongue from which of the following structures?",
+                options: {
+                    A: "1st pharyngeal arch mesenchyme",
+                    B: "2nd pharyngeal arch neural crest",
+                    C: "Copula",
+                    D: "Occipital somites",
+                    E: "Ultimopharyngeal body"
+                },
+                correctAnswer: "D",
+                rationale: "Unlike the mucosal coverings of the tongue (which arise from the pharyngeal arches), the actual tongue musculature is derived from myoblasts that migrate into the tongue from the occipital somites. They carry the hypoglossal nerve (CN XII) with them during this migration.",
+                source: "[Development of the Pharyngeal Arches PDF], Page 8: \"Tongue muscles are derived from myoblasts that migrate into the tongue region from occipital somites, carrying with them fibers from the hypoglossal nerve (CN XII).\""
+            },
+            {
+                section: "Development of the Pharyngeal Arches",
+                fullLO: "LO5: Describe the major developmental processes and structures involved in development of the face and palate.",
+                question: "An embryologist is studying facial development in the 6th week of gestation. She observes the merging of the two medial nasal prominences in the midline. This fusion forms a wedge of tissue that will ultimately give rise to the philtrum of the upper lip, the premaxillary part of the maxilla (containing four incisors), and which of the following palatal structures?",
+                options: {
+                    A: "Hard palate posterior to the incisive foramen",
+                    B: "Lateral palatine processes",
+                    C: "Palatoglossal arch",
+                    D: "Primary palate",
+                    E: "Soft palate"
+                },
+                correctAnswer: "D",
+                rationale: "The merging of the two medial nasal prominences forms the intermaxillary segment. The intermaxillary segment gives rise to the philtrum of the upper lip, the premaxilla (upper jaw component with four incisors), and the primary palate.",
+                source: "[Development of the Pharyngeal Arches PDF], Page 10: \"Primary Palate 1. Develops from the intermaxillary segment, which was created by the fusion of the two medial nasal prominences... 3. The primary palate forms the premaxillary part of the maxilla, which contains the four incisors and the incisive canal.\""
+            },
+            {
+                section: "Development of the Pharyngeal Arches",
+                fullLO: "LO5: Describe the major developmental processes and structures involved in development of the face and palate.",
+                question: "During palatogenesis, which occurs between the 5th and 12th weeks of development, outgrowths from the maxillary prominences project obliquely downward on either side of the tongue. As the mandible grows and the tongue moves down, these outgrowths elevate to a horizontal position and fuse in the midline. What are these specific outgrowths called?",
+                options: {
+                    A: "Frontonasal prominences",
+                    B: "Intermaxillary segments",
+                    C: "Lateral palatine processes (palatine shelves)",
+                    D: "Mandibular prominences",
+                    E: "Nasal placodes"
+                },
+                correctAnswer: "C",
+                rationale: "The secondary palate forms from the lateral palatine processes (also known as palatine shelves), which are outgrowths of the maxillary prominences. They initially grow downwards alongside the tongue, but elevate and fuse in the midline to form the hard and soft palate posterior to the incisive foramen.",
+                source: "[Development of the Pharyngeal Arches PDF], Page 10: \"Secondary Palate 1. Develops from outgrowths of the maxillary prominences called the lateral palatine processes (palatine shelves). 2. Initially, the lateral palatine processes project obliquely downward on either side of the tongue.\""
+            },
+            {
+                section: "Development of the Pharyngeal Arches",
+                fullLO: "LO6: Discuss the clinical presentation and etiology of cleft lip and cleft palate.",
+                question: "A male newborn is delivered at term and is noted to have a unilateral fissure extending from his upper lip to the right nostril. The pediatrician explains to the parents that this defect occurred during the early weeks of pregnancy due to the failure of two facial prominences to properly merge. Specifically, a cleft lip results from the failure of the maxillary prominence to unite with which of the following structures?",
+                options: {
+                    A: "Frontonasal prominence",
+                    B: "Lateral nasal prominence",
+                    C: "Mandibular prominence",
+                    D: "Medial nasal prominence",
+                    E: "Primary palate"
+                },
+                correctAnswer: "D",
+                rationale: "A cleft lip occurs when the maxillary prominence fails to fuse with the medial nasal prominence. This leaves a persistent labial groove that stretches and tears, creating the cleft.",
+                source: "[Development of the Pharyngeal Arches PDF], Page 10: \"Cleft lip results from failure of the maxillary prominence to unite with the medial nasal prominences. This produces a deep labial groove, and the floor of the groove eventually becomes stretched and obliterated, leaving a complete cleft.\""
+            },
+            {
+                section: "Development of the Pharyngeal Arches",
+                fullLO: "LO6: Discuss the clinical presentation and etiology of cleft lip and cleft palate.",
+                question: "A female infant is born with an intact upper lip and face, but oral examination reveals a wide fissure running down the midline of the roof of her mouth, creating an open communication between the oral and nasal cavities. A cleft of this posterior (secondary) palate is caused by the failure of which of the following structures to meet and fuse with each other?",
+                options: {
+                    A: "Frontonasal prominence and medial nasal prominences",
+                    B: "Intermaxillary segment and primary palate",
+                    C: "Lateral palatine processes",
+                    D: "Maxillary prominence and medial nasal prominence",
+                    E: "Nasal placodes"
+                },
+                correctAnswer: "C",
+                rationale: "A cleft of the posterior (secondary) palate occurs when the lateral palatine processes fail to elevate, meet in the midline, and fuse with each other and the nasal septum.",
+                source: "[Development of the Pharyngeal Arches PDF], Page 11: \"A cleft of the posterior (secondary) palate results from failure of the lateral palatine processes to meet with each other and fuse with the nasal septum. This could be caused by defective growth or positioning of the lateral palatine processes.\""
+            },
+
+            // --- Section 3: Development of the Gastrointestinal System ---
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO1: Describe the development of the primitive gut (foregut, midgut, and hindgut), including blood supply, rotation, recanalization, postnatal positioning, and developmental derivatives.",
+                question: "A medical student is studying the embryological rotation of the midgut. During normal development, the midgut loop herniates into the umbilical cord to accommodate its rapid growth. As it returns to the abdominal cavity during the 10th week, it undergoes a complex rotation around the axis of the superior mesenteric artery. What is the total degree and direction of this normal midgut rotation?",
+                options: {
+                    A: "90 degrees clockwise",
+                    B: "90 degrees counterclockwise",
+                    C: "180 degrees clockwise",
+                    D: "270 degrees clockwise",
+                    E: "270 degrees counterclockwise"
+                },
+                correctAnswer: "E",
+                rationale: "The midgut loop initially rotates 90° counterclockwise while herniating into the umbilical cord. When it returns to the abdomen, it rotates an additional 180° counterclockwise, resulting in a total rotation of 270° counterclockwise around the superior mesenteric artery.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 7: \"During the 10th week, the midgut begins to return to the abdomen. As it returns, it continues to rotate an additional 180° counterclockwise. (Thus, the midgut rotated a total of 270° counterclockwise.)\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO1: Describe the development of the primitive gut (foregut, midgut, and hindgut), including blood supply, rotation, recanalization, postnatal positioning, and developmental derivatives.",
+                question: "A neonate is evaluated for a suspected congenital anomaly of the lower gastrointestinal tract. To understand the extent of the defect, the surgeon recalls that the hindgut gives rise to specific distal structures. Which of the following segments of the colon is a direct developmental derivative of the hindgut?",
+                options: {
+                    A: "Ascending colon",
+                    B: "Cecum",
+                    C: "Descending colon",
+                    D: "Proximal 1/3 of the transverse colon",
+                    E: "Proximal 2/3 of the transverse colon"
+                },
+                correctAnswer: "C",
+                rationale: "The hindgut gives rise to the distal 1/3 of the transverse colon, the descending colon, the sigmoid colon, the rectum, and the superior part of the anal canal. The ascending colon, cecum, and proximal 2/3 of the transverse colon are derivatives of the midgut.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 2: \"Hindgut... Derivatives: i. Distal 1/3 of the transverse colon ii. Descending colon, sigmoid colon, rectum, & superior part of the anal canal\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO2: Describe the development of the mesenteries associated with the foregut, midgut, and hindgut as well as development of the spleen.",
+                question: "A 25-year-old man undergoes a splenectomy following blunt abdominal trauma. The surgeon reflects on the embryological origin of the spleen while mobilizing it from the posterior abdominal wall. Unlike the stomach and liver, the spleen is not a derivative of the endodermal foregut tube. From which of the following embryologic tissues does the spleen primarily develop?",
+                options: {
+                    A: "Ectoderm of the proctodeum",
+                    B: "Endoderm of the hepatic diverticulum",
+                    C: "Neural crest cells of the vagus nerve",
+                    D: "Splanchnic mesoderm within the dorsal mesentery",
+                    E: "Splanchnic mesoderm within the ventral mesentery"
+                },
+                correctAnswer: "D",
+                rationale: "The spleen develops as a mass of proliferating splanchnic mesoderm located between the layers of the dorsal mesentery of the stomach (dorsal mesogastrium). It is not an endodermal foregut derivative.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 6: \"Spleen a. Develops as a proliferation of splanchnic mesoderm within the dorsal mesentery during the 5th week. It shifts to the left side of the body as the stomach and dorsal mesentery rotate. It is not a derivative of the foregut.\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO2: Describe the development of the mesenteries associated with the foregut, midgut, and hindgut as well as development of the spleen.",
+                question: "During the embryonic development of the foregut, the septum transversum gives rise to a mass of splanchnic mesoderm that suspends the foregut from the anterior body wall. This structure is the ventral mesentery. In the adult abdomen, the ventral mesentery ultimately gives rise to which of the following ligamentous structures?",
+                options: {
+                    A: "Falciform ligament",
+                    B: "Gastrocolic ligament",
+                    C: "Gastrosplenic ligament",
+                    D: "Greater omentum",
+                    E: "Splenorenal ligament"
+                },
+                correctAnswer: "A",
+                rationale: "The ventral mesentery, which suspends the foregut from the anterior body wall and is derived from the septum transversum, gives rise to the lesser omentum and the falciform ligament. The greater omentum and splenorenal ligaments derive from the dorsal mesentery.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 3: \"Ventral mesentery – suspends foregut from the anterior body wall i. Derived from the septum transversum... ii. Gives rise to: Lesser omentum, falciform ligament\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO3: Discuss how developmental anomalies in the gastrointestinal tract can cause polyhydramnios.",
+                question: "A 30-year-old pregnant woman at 32 weeks gestation undergoes a routine ultrasound. The obstetrician notes severe polyhydramnios (excessive amniotic fluid). The fetal stomach bubble is completely absent. The physician suspects a congenital anomaly that is physically preventing the fetus from swallowing amniotic fluid into the GI tract. Which of the following is the most likely foregut defect?",
+                options: {
+                    A: "Congenital megacolon",
+                    B: "Esophageal atresia",
+                    C: "Gastroschisis",
+                    D: "Meckel's diverticulum",
+                    E: "Omphalocele"
+                },
+                correctAnswer: "B",
+                rationale: "In esophageal atresia, the esophagus ends in a blind pouch. Because the fetus cannot swallow and pass amniotic fluid into the stomach and intestines for absorption, the fluid accumulates in the amniotic sac, causing polyhydramnios.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 3: \"A fetus with esophageal atresia is unable to swallow amniotic fluid, resulting in the mother having polyhydramnios, where there is too much amniotic fluid.\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO3: Discuss how developmental anomalies in the gastrointestinal tract can cause polyhydramnios.",
+                question: "A prenatal ultrasound at 34 weeks gestation reveals polyhydramnios and a prominent \"double bubble\" sign in the fetal abdomen. The physician explains that an occlusion in the fetal gut is preventing normal intestinal absorption of the amniotic fluid. This specific ultrasound finding and resulting polyhydramnios is most classically caused by failure of recanalization in which of the following structures?",
+                options: {
+                    A: "Descending colon",
+                    B: "Duodenum",
+                    C: "Esophagus",
+                    D: "Ileum",
+                    E: "Pylorus"
+                },
+                correctAnswer: "B",
+                rationale: "Duodenal atresia is caused by a failure of the duodenum to recanalize. It prevents swallowed amniotic fluid from moving distally for absorption, causing polyhydramnios. The classic imaging finding is the \"double bubble\" sign caused by fluid/gas distending the stomach and the proximal duodenum.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 5: \"Polyhydramnios also occurs because duodenal atresia prevents normal intestinal absorption of swallowed amniotic fluid. Diagnosis of duodenal atresia is suggested by the presence of a “double bubble” sign on plain radiographs or ultrasound scans.\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO4: Discuss the embryological basis/cause, symptoms, clinical presentation (including presentation via diagnostic imaging), and treatment of congenital anomalies related to the foregut such as: esophageal atresia & stenosis, pyloric stenosis, duodenal atresia & stenosis, annular pancreas, and accessory spleens.",
+                question: "A full-term newborn begins to exhibit excessive drooling shortly after birth. During the first feeding, the infant immediately regurgitates the formula and begins coughing and choking. The nurse attempts to pass a nasogastric tube to decompress the stomach, but the tube coils in the upper chest and cannot be advanced. Which of the following is the most likely underlying embryological cause of this infant's presentation?",
+                options: {
+                    A: "Deviation of the tracheoesophageal septum",
+                    B: "Failure of neural crest cell migration",
+                    C: "Hypertrophy of circular smooth muscle",
+                    D: "Incomplete rotation of the midgut loop",
+                    E: "Persistence of the vitelline duct"
+                },
+                correctAnswer: "A",
+                rationale: "The infant has esophageal atresia (with or without a tracheoesophageal fistula), marked by drooling, immediate regurgitation, and inability to pass an NG tube. This typically results from the posterior deviation of the tracheoesophageal septum, causing incomplete separation of the esophagus from the laryngotracheal tube.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 3: \"Newborns usually appear healthy initially, but excessive drooling may be noted shortly after birth along with the inability to feed without immediate regurgitation & coughing. Inability to pass a nasogastric tube through the esophagus into the stomach strongly suggests esophageal atresia... Esophageal atresia associated with a TEF results from deviation of the tracheoesophageal septum in a posterior direction\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO4: Discuss the embryological basis/cause, symptoms, clinical presentation (including presentation via diagnostic imaging), and treatment of congenital anomalies related to the foregut such as: esophageal atresia & stenosis, pyloric stenosis, duodenal atresia & stenosis, annular pancreas, and accessory spleens.",
+                question: "A 6-month-old infant begins to experience difficulty swallowing and frequent regurgitation shortly after transitioning from a liquid diet to solid foods. An esophagram reveals a long, threadlike narrowing in the distal third of the esophagus. The pediatric gastroenterologist explains that this narrowing is a congenital defect. Which of the following embryological events most likely failed to occur properly to cause this condition?",
+                options: {
+                    A: "Apoptosis of the cloacal membrane",
+                    B: "Descent of the cecum",
+                    C: "Fusion of the lateral palatine processes",
+                    D: "Recanalization of the esophageal lumen",
+                    E: "Rotation of the stomach"
+                },
+                correctAnswer: "D",
+                rationale: "Congenital esophageal stenosis is a narrowing of the esophageal lumen, often in the distal third. It typically results from incomplete recanalization of the esophagus during the 8th week of development.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 3: \"Congenital esophageal stenosis, narrowing of the esophageal lumen, usually occurs in the distal third of the esophagus. It often appears as a web or long segment of esophagus with a threadlike lumen and usually results from incomplete recanalization of the esophagus during the 8th week.\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO4: Discuss the embryological basis/cause, symptoms, clinical presentation (including presentation via diagnostic imaging), and treatment of congenital anomalies related to the foregut such as: esophageal atresia & stenosis, pyloric stenosis, duodenal atresia & stenosis, annular pancreas, and accessory spleens.",
+                question: "A 4-week-old male infant is brought to the clinic due to worsening episodes of vomiting over the past week. The mother describes the vomiting as forceful and notes that it does not contain bile (nonbilious). Physical examination reveals a markedly distended stomach and a palpable, small olive-shaped mass in the right upper quadrant. What is the most likely diagnosis?",
+                options: {
+                    A: "Congenital megacolon",
+                    B: "Duodenal atresia",
+                    C: "Esophageal atresia",
+                    D: "Hypertrophic pyloric stenosis",
+                    E: "Midgut volvulus"
+                },
+                correctAnswer: "D",
+                rationale: "Hypertrophic pyloric stenosis is characterized by marked thickening of the pyloric sphincter muscle, leading to severe stenosis. Classic symptoms include projectile (forceful), nonbilious vomiting starting at 3-8 weeks of age, a distended stomach, and a palpable olive-shaped mass.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 4: \"Congenital hypertrophic pyloric stenosis is characterized by a marked thickening of the circular & longitudinal muscle... As a result, the stomach becomes markedly distended, and the infant expels the stomach’s contents with considerable force (projectile vomiting). A small olive-shaped mass (abnormal pylorus), may be palpated when touching the stomach area.\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO4: Discuss the embryological basis/cause, symptoms, clinical presentation (including presentation via diagnostic imaging), and treatment of congenital anomalies related to the foregut such as: esophageal atresia & stenosis, pyloric stenosis, duodenal atresia & stenosis, annular pancreas, and accessory spleens.",
+                question: "A newborn infant vomits dark green, bilious material within hours of birth. The abdomen appears slightly distended in the epigastric region. An abdominal X-ray demonstrates a prominent \"double bubble\" sign with no gas seen in the distal bowel. This anomaly is strongly associated with which of the following chromosomal abnormalities?",
+                options: {
+                    A: "Chromosome 22q11.2 deletion",
+                    B: "Down syndrome (Trisomy 21)",
+                    C: "Monosomy X (Turner syndrome)",
+                    D: "Trisomy 13 (Patau syndrome)",
+                    E: "Trisomy 18 (Edwards syndrome)"
+                },
+                correctAnswer: "B",
+                rationale: "Duodenal atresia causes bilious vomiting shortly after birth and a \"double bubble\" on X-ray. It is highly associated with Down syndrome, as approximately 1/3 of affected infants have this chromosomal abnormality.",
+                source: "[Development of the Gastrointestinal Tract PDF], Pages 4-5: \"Infants with duodenal atresia exhibit bilious emesis (vomit containing bile) shortly after birth... Approximately 1/3 of affected infants have Down syndrome\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO4: Discuss the embryological basis/cause, symptoms, clinical presentation (including presentation via diagnostic imaging), and treatment of congenital anomalies related to the foregut such as: esophageal atresia & stenosis, pyloric stenosis, duodenal atresia & stenosis, annular pancreas, and accessory spleens.",
+                question: "A 2-year-old child presents with symptoms of partial bowel obstruction. Advanced imaging reveals a thin, flat band of glandular tissue completely encircling the descending part of the duodenum. The physician explains that this tissue is causing the obstruction due to local inflammation. Which of the following embryological events best explains the formation of this constricting band?",
+                options: {
+                    A: "Failure of the midgut to return to the abdominal cavity",
+                    B: "Hypertrophy of the circular smooth muscle of the duodenum",
+                    C: "Incomplete rotation of the ventral pancreatic bud",
+                    D: "Nonrotation of the midgut loop",
+                    E: "Persistence of the vitelline duct"
+                },
+                correctAnswer: "C",
+                rationale: "An annular pancreas occurs when a band of pancreatic tissue surrounds the descending duodenum. It is caused by the incomplete rotation of the ventral pancreatic bud (or a bifid ventral bud) around the duodenum to meet the dorsal bud, forming a ring that can cause obstruction.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 6: \"An annular pancreas consists of a thin, flat band of pancreatic tissue surrounding the descending part of the duodenum. It can result from incomplete rotation of the ventral pancreatic bud or growth of a bifid ventral pancreatic bud around the duodenum that fuses with the dorsal bud to form a pancreatic ring.\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO4: Discuss the embryological basis/cause, symptoms, clinical presentation (including presentation via diagnostic imaging), and treatment of congenital anomalies related to the foregut such as: esophageal atresia & stenosis, pyloric stenosis, duodenal atresia & stenosis, annular pancreas, and accessory spleens.",
+                question: "During a routine abdominal CT scan for suspected renal stones, an asymptomatic 45-year-old woman is incidentally found to have a 1-cm spherical mass of tissue located near the hilum of her spleen. A biopsy is not performed because the radiologist confidently identifies it as a common, benign developmental anomaly present in about 10% of the population. This mass most likely represents which of the following?",
+                options: {
+                    A: "Accessory spleen",
+                    B: "Ectopic liver lobule",
+                    C: "Meckel's diverticulum",
+                    D: "Pancreatic pseudocyst",
+                    E: "Thyroglossal cyst"
+                },
+                correctAnswer: "A",
+                rationale: "Accessory spleens are small, fully functional masses of splenic tissue that usually occur near the hilum of the spleen. They are a common incidental finding, present in roughly 10% of the population, and are typically about 1 cm in diameter.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 6: \"Accessory spleens are small splenic masses of fully functional splenic tissue that may exist in one of the peritoneal folds (commonly near the hilum of the spleen). Accessory spleens are usually isolated... They occur in ~10% of the population and are usually ~1cm in diameter.\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO5: Discuss the embryological basis/cause, symptoms, clinical presentation (including presentation via diagnostic imaging), and treatment of congenital anomalies related to the midgut and hindgut such as: omphalocele, gastroschisis, volvulus, malrotation, umbilical hernia, Meckel’s diverticulum, congenital megacolon (Hirschsprung Disease), anal & rectal atresia, and fistulas.",
+                question: "A male infant is born with a large abdominal wall defect. Inspection of the abdomen reveals that the intestines, liver, and stomach are herniated into the proximal part of the umbilical cord. The herniated viscera are completely enclosed within a translucent, shiny sac. Which of the following layers correctly describes the composition of this covering sac?",
+                options: {
+                    A: "Ectoderm and endoderm",
+                    B: "Parietal and visceral pleura",
+                    C: "Peritoneum and epithelium of the umbilical cord (amnion)",
+                    D: "Skin and subcutaneous fascia",
+                    E: "Splanchnic mesoderm only"
+                },
+                correctAnswer: "C",
+                rationale: "An omphalocele is a herniation of abdominal contents into the umbilical cord. Unlike gastroschisis, the herniated viscera in an omphalocele are contained within a sac. This protective sac is composed of the peritoneum and the epithelium of the umbilical cord (amnion).",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 8: \"Omphalocele: Herniation of the abdominal contents into the proximal part of the umbilical cord. The abdominal viscera are contained within a sac composed of peritoneum and epithelium of the umbilical cord (amnion derivative).\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO5: Discuss the embryological basis/cause, symptoms, clinical presentation (including presentation via diagnostic imaging), and treatment of congenital anomalies related to the midgut and hindgut such as: omphalocele, gastroschisis, volvulus, malrotation, umbilical hernia, Meckel’s diverticulum, congenital megacolon (Hirschsprung Disease), anal & rectal atresia, and fistulas.",
+                question: "A newborn female presents with loops of bowel protruding directly into the amniotic cavity through a defect in the anterior abdominal wall. The defect is located just lateral to the umbilicus, on the right side. The protruding intestines are free-floating and are not covered by any membranous sac. Which of the following is the most likely diagnosis?",
+                options: {
+                    A: "Congenital umbilical hernia",
+                    B: "Gastroschisis",
+                    C: "Meckel's diverticulum",
+                    D: "Midgut volvulus",
+                    E: "Omphalocele"
+                },
+                correctAnswer: "B",
+                rationale: "Gastroschisis is the extrusion of abdominal viscera directly through a defect in the abdominal wall, typically lateral to the umbilicus (usually the right side). Crucially, the viscera are directly exposed to the amniotic cavity and are not covered by a sac or the umbilical cord.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 9: \"Gastroschisis: Extrusion of the abdominal viscera directly into the amniotic cavity through a defect in the anterior abdominal wall lateral to the umbilicus (usually on right side). Usually does not involve the umbilical cord.\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO5: Discuss the embryological basis/cause, symptoms, clinical presentation (including presentation via diagnostic imaging), and treatment of congenital anomalies related to the midgut and hindgut such as: omphalocele, gastroschisis, volvulus, malrotation, umbilical hernia, Meckel’s diverticulum, congenital megacolon (Hirschsprung Disease), anal & rectal atresia, and fistulas.",
+                question: "A 2-month-old infant suddenly develops severe, bilious vomiting and a distended, rigid abdomen. Emergency laparotomy reveals an abnormal rotation of the intestines, which have twisted around their vascular supply. A segment of the small intestine is dark red and gangrenous. Which of the following arteries was most likely obstructed by this twisting?",
+                options: {
+                    A: "Celiac trunk",
+                    B: "Inferior mesenteric artery",
+                    C: "Internal iliac artery",
+                    D: "Left gastric artery",
+                    E: "Superior mesenteric artery"
+                },
+                correctAnswer: "E",
+                rationale: "The infant has a midgut volvulus, which occurs when malrotated intestines twist around their mesentery and vascular supply. Because the midgut is supplied by the superior mesenteric artery (SMA), this twisting obstructs the SMA, leading to ischemia, infarction, and gangrene of the midgut.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 9: \"Midgut Volvulus: Twisting of the intestines around their vascular supply... When a midgut volvulus occurs, the SMA may be obstructed, resulting in infarction, necrosis, & gangrene of the intestine supplied by it.\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO5: Discuss the embryological basis/cause, symptoms, clinical presentation (including presentation via diagnostic imaging), and treatment of congenital anomalies related to the midgut and hindgut such as: omphalocele, gastroschisis, volvulus, malrotation, umbilical hernia, Meckel’s diverticulum, congenital megacolon (Hirschsprung Disease), anal & rectal atresia, and fistulas.",
+                question: "A 3-month-old infant is brought to the pediatrician by his mother, who is concerned about a bulge on his belly. Examination reveals a soft swelling protruding from the umbilicus. The swelling becomes more prominent when the infant cries or strains but is easily reducible. The overlying skin is intact and normal in appearance. The pediatrician reassures the mother that surgery is likely unnecessary at this age. This defect is covered by which of the following?",
+                options: {
+                    A: "Amniotic membrane only",
+                    B: "Parietal peritoneum only",
+                    C: "Peritoneum and amnion",
+                    D: "Subcutaneous tissue and skin",
+                    E: "Visceral peritoneum only"
+                },
+                correctAnswer: "D",
+                rationale: "An umbilical hernia occurs when intestines herniate through an imperfectly closed umbilicus after initially returning to the abdomen. Unlike an omphalocele (covered by amnion/peritoneum) or gastroschisis (no covering), an umbilical hernia is covered by normal subcutaneous tissue and skin.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 9: \"Umbilical Hernia: Herniation of the intestines through an imperfectly closed umbilicus after the intestines have returned to the abdominal cavity... The protruding hernia (usually the greater omentum & part of the small intestine) is covered by subcutaneous tissue & skin.\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO5: Discuss the embryological basis/cause, symptoms, clinical presentation (including presentation via diagnostic imaging), and treatment of congenital anomalies related to the midgut and hindgut such as: omphalocele, gastroschisis, volvulus, malrotation, umbilical hernia, Meckel’s diverticulum, congenital megacolon (Hirschsprung Disease), anal & rectal atresia, and fistulas.",
+                question: "A 4-year-old boy is brought to the emergency department after passing a large amount of maroon-colored, painless stool. A technetium-99m pertechnetate scan identifies an area of ectopic gastric mucosa in the right lower quadrant, localized to a blind out-pouching on the antimesenteric border of the ileum, exactly 2 feet from the ileocecal valve. This out-pouching is an embryological remnant of which of the following structures?",
+                options: {
+                    A: "Allantois",
+                    B: "Cloaca",
+                    C: "Hepatic diverticulum",
+                    D: "Urorectal septum",
+                    E: "Vitelline duct"
+                },
+                correctAnswer: "E",
+                rationale: "The patient has a Meckel's (ileal) diverticulum, which typically presents with painless rectal bleeding due to ulceration from ectopic gastric mucosa. It represents a persistence of the proximal part of the vitelline duct (yolk stalk).",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 10: \"Meckel’s (Ileal) Diverticulum: The vitelline duct usually obliterates, but it may persist in its proximal part as a diverticulum off the terminal ileum... Usually presents as painless rectal bleeding & blood in stool\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO5: Discuss the embryological basis/cause, symptoms, clinical presentation (including presentation via diagnostic imaging), and treatment of congenital anomalies related to the midgut and hindgut such as: omphalocele, gastroschisis, volvulus, malrotation, umbilical hernia, Meckel’s diverticulum, congenital megacolon (Hirschsprung Disease), anal & rectal atresia, and fistulas.",
+                question: "A full-term newborn male fails to pass meconium within the first 48 hours of life. He develops progressive abdominal distension and bilious vomiting. A rectal biopsy demonstrates a complete absence of parasympathetic ganglion cells in the submucosal and myenteric plexuses of the distal colon. This condition is directly caused by a failure of which of the following cellular processes?",
+                options: {
+                    A: "Apoptosis of the cloacal membrane",
+                    B: "Canalization of the endodermal gut tube",
+                    C: "Migration of neural crest cells into the hindgut wall",
+                    D: "Prolliferation of the splanchnic mesoderm",
+                    E: "Rotation of the midgut loop"
+                },
+                correctAnswer: "C",
+                rationale: "Congenital megacolon (Hirschsprung disease) is characterized by an absence of ganglion cells (aganglionosis) in the distal bowel. It results from the failure of neural crest cells to migrate into the hindgut wall, which prevents the formation of the parasympathetic ganglia required for normal peristalsis.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 11: \"Congenital Megacolon (Hirschsprung Disease): Congenital disease characterized by an absence of ganglion cells (aganglionosis) in a variable length of distal bowel... It results from failure of neural crest cells to migrate into the wall of the hindgut during the 5th – 7th weeks.\""
+            },
+            {
+                section: "Development of the Gastrointestinal System",
+                fullLO: "LO5: Discuss the embryological basis/cause, symptoms, clinical presentation (including presentation via diagnostic imaging), and treatment of congenital anomalies related to the midgut and hindgut such as: omphalocele, gastroschisis, volvulus, malrotation, umbilical hernia, Meckel’s diverticulum, congenital megacolon (Hirschsprung Disease), anal & rectal atresia, and fistulas.",
+                question: "A female infant is born and during the initial physical examination, the pediatrician notes the absence of a normal anal opening. Instead, meconium is observed passing out of the vagina. The pediatrician diagnoses a rectovaginal fistula. This abnormal connection between the rectum and the reproductive system is most likely caused by abnormal development of which of the following embryological structures?",
+                options: {
+                    A: "Hepatic diverticulum",
+                    B: "Primary palate",
+                    C: "Tracheoesophageal septum",
+                    D: "Urorectal septum",
+                    E: "Vitelline duct"
+                },
+                correctAnswer: "D",
+                rationale: "Fistulas in the anorectal region (such as a rectovaginal fistula) result from abnormalities in the formation of the cloaca and/or the urorectal septum. The urorectal septum normally grows down to divide the cloaca into the urogenital sinus (anterior) and the anorectal canal (posterior). If it fails to completely divide these structures, abnormal connections (fistulas) remain.",
+                source: "[Development of the Gastrointestinal Tract PDF], Page 11: \"Fistulas: Abnormal connections between the rectum & bladder (rectovesical fistula), rectum & urethra... or rectum & reproductive system (rectovaginal fistulas). They may be caused by abnormalities in formation of the cloaca &/or urorectal septum.\""
+            }
+        ];
+
+        // --- Core Logic ---
+        const quizRoot = document.getElementById('quiz-root');
+        const themeSelect = document.getElementById('theme-select');
+        const pinBtn = document.getElementById('pin-btn');
+        const mainHeader = document.getElementById('main-header');
+        const sectionNav = document.getElementById('section-nav');
+        const customBuilder = document.getElementById('custom-builder');
+        const rootElements = document.documentElement;
+
+        let isRevealed = false;
+
+        function toggleAllLOs() {
+            isRevealed = !isRevealed;
+            const btn = document.getElementById('reveal-all-btn');
+            btn.textContent = isRevealed ? "Hide Learning Objectives" : "Show Learning Objectives";
+            
+            document.querySelectorAll('.lo-box').forEach(box => {
+                box.style.display = isRevealed ? 'block' : 'none';
+            });
+        }
+
+        function initQuiz() {
+            let currentSection = "";
+            let sectionIndex = 0;
+            
+            quizData.forEach((item, index) => {
+                if (item.section !== currentSection) {
+                    currentSection = item.section;
+                    
+                    const sectionId = 'sec-' + sectionIndex;
+                    
+                    const sectionHeader = document.createElement('h2');
+                    sectionHeader.className = 'section-header';
+                    sectionHeader.id = sectionId;
+                    sectionHeader.textContent = currentSection;
+                    quizRoot.appendChild(sectionHeader);
+
+                    const navBtn = document.createElement('button');
+                    let btnText = currentSection;
+                    if (btnText.includes("Superior and Inferior Mesenteric")) btnText = "Mesenteric Arteries & Viscera";
+                    if (btnText.includes("Development of the Pharyngeal Arches")) btnText = "Pharyngeal Arches Development";
+                    if (btnText.includes("Development of the Gastrointestinal System")) btnText = "GI System Development";
+                    
+                    navBtn.textContent = btnText;
+                    navBtn.onclick = () => {
+                        document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+                    };
+                    sectionNav.appendChild(navBtn);
+
+                    sectionIndex++;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-card-${index}`;
+
+                const loBox = document.createElement('div');
+                loBox.className = 'lo-box';
+                loBox.id = `lo-${index}`;
+                loBox.innerHTML = item.fullLO;
+                card.appendChild(loBox);
+
+                const qText = document.createElement('div');
+                qText.className = 'question-text';
+                qText.innerHTML = `${index + 1}. ${item.question}`;
+                card.appendChild(qText);
+
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+
+                for (const[key, value] of Object.entries(item.options)) {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `question-${index}`;
+                    input.value = key;
+
+                    const span = document.createElement('span');
+                    span.innerHTML = `${key}. ${value}`;
+
+                    label.appendChild(input);
+                    label.appendChild(span);
+                    optionsGrid.appendChild(label);
+                }
+                card.appendChild(optionsGrid);
+
+                const btn = document.createElement('button');
+                btn.className = 'btn-check';
+                btn.textContent = 'Check Answer';
+                btn.onclick = () => checkAnswer(index);
+                card.appendChild(btn);
+
+                const feedback = document.createElement('div');
+                feedback.className = 'feedback';
+                feedback.id = `feedback-${index}`;
+                card.appendChild(feedback);
+
+                quizRoot.appendChild(card);
+            });
+
+            const returnContainer = document.createElement('div');
+            returnContainer.style.textAlign = 'center';
+            returnContainer.style.marginTop = '2rem';
+            
+            const returnBtn = document.createElement('a');
+            returnBtn.href = 'https://ibecerramcg.github.io/GI-GU-ENDO-Practice-Quizzes/';
+            returnBtn.className = 'btn-link';
+            returnBtn.textContent = '← Return to Quiz Directory';
+            
+            returnContainer.appendChild(returnBtn);
+            quizRoot.appendChild(returnContainer);
+
+            const savedTheme = localStorage.getItem('quizTheme') || 'dark';
+            themeSelect.value = savedTheme;
+            changeTheme(savedTheme);
+
+            const savedPinState = localStorage.getItem('headerPinned');
+            toggleHeader(savedPinState !== 'false');
+        }
+
+        function checkAnswer(index) {
+            const selected = document.querySelector(`input[name="question-${index}"]:checked`);
+            const feedbackEl = document.getElementById(`feedback-${index}`);
+            const data = quizData[index];
+
+            if (!selected) {
+                alert("Please select an answer.");
+                return;
+            }
+
+            const isCorrect = selected.value === data.correctAnswer;
+            
+            let html = `<span class="feedback-header">${isCorrect ? "Correct!" : "Incorrect"}</span>`;
+            if (!isCorrect) {
+                html += `<div>The correct answer is <strong>${data.correctAnswer}</strong>.</div>`;
+            }
+            
+            html += `<div class="rationale"><strong>Rationale:</strong> ${data.rationale}</div>`;
+            html += `<div class="source"><strong>Source:</strong> ${data.source}</div>`;
+
+            feedbackEl.innerHTML = html;
+            feedbackEl.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+            feedbackEl.style.display = 'block';
+        }
+
+        function changeTheme(themeName) {
+            localStorage.setItem('quizTheme', themeName);
+            
+            if (themeName === 'custom') {
+                rootElements.removeAttribute('data-theme');
+                customBuilder.classList.add('active');
+                loadCustomTheme();
+            } else {
+                rootElements.setAttribute('data-theme', themeName);
+                customBuilder.classList.remove('active');
+                rootElements.removeAttribute('style');
+            }
+        }
+
+        function updateCustomTheme() {
+            const bg = document.getElementById('color-bg').value;
+            const card = document.getElementById('color-card').value;
+            const text = document.getElementById('color-text').value;
+            const accent = document.getElementById('color-accent').value;
+
+            rootElements.style.setProperty('--bg-body', bg);
+            rootElements.style.setProperty('--bg-header', bg);
+            rootElements.style.setProperty('--bg-card', card);
+            rootElements.style.setProperty('--highlight-bg', card);
+            rootElements.style.setProperty('--text-main', text);
+            rootElements.style.setProperty('--text-accent', accent);
+            rootElements.style.setProperty('--button-bg', accent);
+            rootElements.style.setProperty('--button-text', bg);
+            rootElements.style.setProperty('--border-color', accent + '40');
+
+            const customColors = { bg, card, text, accent };
+            localStorage.setItem('customThemeColors', JSON.stringify(customColors));
+        }
+
+        function loadCustomTheme() {
+            const savedColors = JSON.parse(localStorage.getItem('customThemeColors'));
+            if (savedColors) {
+                document.getElementById('color-bg').value = savedColors.bg;
+                document.getElementById('color-card').value = savedColors.card;
+                document.getElementById('color-text').value = savedColors.text;
+                document.getElementById('color-accent').value = savedColors.accent;
+                updateCustomTheme();
+            } else {
+                updateCustomTheme();
+            }
+        }
+
+        function toggleHeader(forceState) {
+            const isCurrentlyPinned = !mainHeader.classList.contains('unpinned');
+            const newState = (typeof forceState === 'boolean') ? forceState : !isCurrentlyPinned;
+
+            if (newState) {
+                mainHeader.classList.remove('unpinned');
+                pinBtn.classList.add('pin-active');
+                localStorage.setItem('headerPinned', 'true');
+            } else {
+                mainHeader.classList.add('unpinned');
+                pinBtn.classList.remove('pin-active');
+                localStorage.setItem('headerPinned', 'false');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initQuiz);
+
+    </script>
+</body>
+</html>
