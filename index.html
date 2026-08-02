@@ -1394,7 +1394,7 @@ function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); 
 const sections = [];
 quizData.forEach(q => { if (!sections.includes(q.section)) sections.push(q.section); });
 function shortLabel(name) {
-    const map = {};
+    const map = {"Superior and Inferior Mesenteric Arteries and Associated Abdominal Viscera":"Mesenteric Arteries & Viscera","Development of the Pharyngeal Arches":"Pharyngeal Arch Development","Development of the Gastrointestinal System":"GI System Development"};
     return map[name] || name;
 }
 window.__bbShortLabel = shortLabel;
